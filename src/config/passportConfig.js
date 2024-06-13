@@ -17,7 +17,7 @@ const jwtStratergy = jwt.Strategy;
 const cookieExtractor = (req) =>{
     let token = null;
     if (req && req.cookies) {
-      token = req.cookies.auth ?? null;
+      token = req.cookies.accessToken ?? null;
     }
     return token;
 };
@@ -105,7 +105,7 @@ const initializatePassport = () => {
         }
     ));
 
-    passport.use('login', new localStratergy(
+    /*passport.use('login', new localStratergy(
         {
             usernameField: 'email'
         },
@@ -127,7 +127,7 @@ const initializatePassport = () => {
                 return done(error.message);
             }
         }
-    ));
+    ));*/
 
     passport.serializeUser((user, done) => done(null, user._id));
 

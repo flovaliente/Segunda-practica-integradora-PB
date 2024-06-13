@@ -32,7 +32,7 @@ router.get('/failRegister', (req, res) =>{
     });
 });
 
-router.post("/login", passport.authenticate("login", { failureRedirect: "api/session/failLogin" }), async (req, res) =>{
+router.post("/login", async (req, res) =>{
    const { email, password } = req.body; 
    try {
         req.session.failLogin = false;
@@ -46,10 +46,11 @@ router.post("/login", passport.authenticate("login", { failureRedirect: "api/ses
 
         req.session.user = user;
         const accessToken = generateToken(user);
+        console.log(accessToken);
         res.cookie('accessToken', accessToken, { maxAge: 60*60*1000, httpOnly: true });
         //console.log('Login exitoso!');
-        //return res.redirect("/products");
-        return res.json({ message: 'Logged in', token: accessToken });
+        return res.redirect("/products");
+        //return res.json({ message: 'Logged in', token: accessToken });
     } catch (error) {
         //console.log('Error durante el login. Error: ', error.message);
         req.session.failLogin = true;
@@ -67,6 +68,7 @@ router.get('/failLogin', (req, res) =>{
 
 router.get('/logout', async (req, res) =>{
     req.session.destroy( error =>{
+        res.clearCookie("accessToken");
         res.redirect("/login");
     });
 });
