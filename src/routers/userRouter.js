@@ -16,6 +16,7 @@ router.post('/register', passport.authenticate("register", { failureRedirect: "/
     try {
         const user = req.body;
         const result = await userManager.registerUser(user);
+        console.log("Usuario de router: ", result);
         const cart = await cartManager.createCart();
         await userManager.createUserCart(result._id, cart._id);
         res.redirect('/login');
@@ -79,6 +80,18 @@ router.get('/logout', async (req, res) =>{
         user: req.user
     });
 });*/
+
+router.get('/github', passport.authenticate('github', { scope: [ 'user:email' ] }), (req, res) =>{
+    res.send({
+        status: 'success',
+        message: 'Success'
+    });
+});
+
+router.get('/githubcallback', passport.authenticate('github', { failureRedirect: '/login' }), (req, res) =>{
+    req.session.user = req.user;
+    res.redirect('/products');
+});
 
 router.get('/current', passportCall('jwt'), authorization('User'), (req, res) =>{
     res.send({

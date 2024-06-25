@@ -47,7 +47,7 @@ const initializatePassport = () => {
         {
             clientID: CLIENT_ID,
             clientSecret: SECRET_ID,
-            callbackURL: 'http://localhost:8080/api/session/githubcallback'
+            callbackURL: 'http://localhost:8080/api/users/githubcallback'
         },
         async (accessToken, refreshToken, profile, done) =>{
             try {
@@ -88,7 +88,7 @@ const initializatePassport = () => {
             usernameField: 'email'
         },
         async (req, username, password, done) => {
-            const { first_name, last_name, email, age } = req.body;
+            const { firstName, lastName, email, age } = req.body;
             try {
                 let user = await userManager.findUserByEmail(username);
                 if(user){
@@ -96,8 +96,11 @@ const initializatePassport = () => {
                     return done(null, false);
                 }
 
-                const newUser = { first_name, last_name, email, password };
-                const result = await userManager.registerUser(newUser);
+                const newUser = { firstName, lastName, email, password };
+                const registeredUser = await userManager.registerUser(newUser);
+                const cart = await cartManager.createCart();
+                const result = await userManager.createUserCart(registeredUser._id, cart._id);
+                console.log("User with cart from passportConfig: ", result);
                 return done(null, result);
             } catch (error) {
                 return done(error.message);

@@ -12,7 +12,6 @@ import cartRouter from './routers/cartRouter.js';//
 import indexRouter from './routers/indexRouter.js';//
 import chatRouter from './routers/messageRouter.js';//
 import userRouter from './routers/userRouter.js';//
-import sessionRouter from './routers/sessionRouter.js';
 import initializatePassport from './config/passportConfig.js';
 
 
@@ -64,7 +63,6 @@ app.set('view engine', 'handlebars');//
 
 //Routers
 app.use('/', indexRouter);//
-app.use('/api/session', sessionRouter);
 app.use('/api/users', userRouter);//
 app.get('/realTimeProducts', indexRouter);
 app.use('/api/products', productsRouter);//

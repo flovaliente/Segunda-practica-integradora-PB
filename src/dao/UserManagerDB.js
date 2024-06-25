@@ -1,5 +1,8 @@
 import { userModel } from "./models/userModel.js";
+import CartManagerDB from "./CartManagerDB.js";
 import { createHash, isValidPassword } from '../utils/functionsUtils.js';
+
+const cartManager = new CartManagerDB();
 
 class UserManagerDB{
 
@@ -14,7 +17,9 @@ class UserManagerDB{
             }
             
             const result = await userModel.create(user);
-            console.log("Usuario: ", user);
+            const newCart = await cartManager.createCart()
+            result.cart = newCart._id;
+            console.log("User:", result);
             return result;
         } catch (error) {
             console.error(error.message);
